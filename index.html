@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prediction 35 Logic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+        
+        .timer-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .timer-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #4ecdc4;
+            text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+        }
+        
+        .period-display {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .prediction-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .prediction-result {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.05);
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .result-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .result-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .win-btn {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+        }
+        
+        .loss-btn {
+            background: linear-gradient(45deg, #ff6b6b, #c44d58);
+            color: white;
+        }
+        
+        .result-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .history-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .win-rate {
+            font-size: 1.2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .history-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .win {
+            color: #4ecdc4;
+        }
+        
+        .loss {
+            color: #ff6b6b;
+        }
+        
+        .prediction-big {
+            color: #4ecdc4;
+            text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+        }
+        
+        .prediction-small {
+            color: #ff6b6b;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+        
+        .prediction-red {
+            color: #ff6b6b;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+        
+        .prediction-green {
+            color: #4ecdc4;
+            text-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
+        }
+        
+        .prediction-redviolet {
+            color: #c44569;
+            text-shadow: 0 0 10px rgba(196, 69, 105, 0.5);
+        }
+        
+        .prediction-greenviolet {
+            color: #786fa6;
+            text-shadow: 0 0 10px rgba(120, 111, 166, 0.5);
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .result-controls {
+                flex-direction: column;
+            }
+            
+            .result-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Prediction 35 Logic</h1>
+            <p class="tagline">Advanced prediction system with manual result tracking</p>
+        </header>
+        
+        <section class="timer-section">
+            <h2>Current Period & Timer</h2>
+            <div class="period-display">Period: <span id="period">Loading...</span></div>
+            <div class="timer-display" id="timer">00:00</div>
+        </section>
+        
+        <section class="prediction-section">
+            <h2>Current Prediction</h2>
+            <div class="prediction-result" id="predictionResult">
+                Prediction will appear here
+            </div>
+            <div class="result-controls">
+                <button class="result-btn win-btn" id="markWin">Mark as Win</button>
+                <button class="result-btn loss-btn" id="markLoss">Mark as Loss</button>
+            </div>
+        </section>
+        
+        <section class="history-section">
+            <div class="history-header">
+                <h2>Prediction History</h2>
+                <div class="win-rate">Win Rate: <span id="winRate">0%</span></div>
+            </div>
+            <div class="history-list" id="historyList">
+                <!-- History items will be added here dynamically -->
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Prediction options
+        const predictions = ['Big', 'Small', 'Red', 'Green', 'RedViolet', 'GreenViolet'];
+        
+        // Store history in localStorage
+        let history = JSON.parse(localStorage.getItem('predictionHistory')) || [];
+        
+        // DOM elements
+        const periodElement = document.getElementById('period');
+        const timerElement = document.getElementById('timer');
+        const predictionResult = document.getElementById('predictionResult');
+        const historyList = document.getElementById('historyList');
+        const winRateElement = document.getElementById('winRate');
+        const markWinBtn = document.getElementById('markWin');
+        const markLossBtn = document.getElementById('markLoss');
+        
+        // Current prediction data
+        let currentPrediction = null;
+        let currentPeriod = null;
+        
+        // Initialize the page
+        function init() {
+            updateHistoryDisplay();
+            updateWinRate();
+            
+            // Start the timer
+            startTimer();
+            
+            // Add event listeners for result buttons
+            markWinBtn.addEventListener('click', () => markResult('Win'));
+            markLossBtn.addEventListener('click', () => markResult('Loss'));
+        }
+        
+        // Timer function based on provided code
+        function startTimer() {
+            // Update every second
+            setInterval(() => {
+                const now = new Date();
+                
+                // Convert to Indian timezone (Asia/Kolkata)
+                const options = { timeZone: 'Asia/Kolkata' };
+                const indianTime = new Date(now.toLocaleString('en-US', options));
+                
+                const seconds = indianTime.getSeconds();
+                const remainingSeconds = 60 - seconds;
+                const minutes = indianTime.getMinutes();
+                const hours = indianTime.getHours();
+                const totalMinutes = hours * 60 + minutes;
+                
+                // Update period number for 1-minute interval
+                const year = indianTime.getFullYear();
+                const month = String(indianTime.getMonth() + 1).padStart(2, '0');
+                const day = String(indianTime.getDate()).padStart(2, '0');
+                const periodNumber = `${year}${month}${day}1000${String(10001 + totalMinutes - 330)}`;
+                
+                periodElement.textContent = periodNumber;
+                currentPeriod = periodNumber;
+                
+                // Update timer in format mm:ss for 1-minute interval
+                timerElement.textContent = `00:${String(remainingSeconds).padStart(2, '0')}`;
+                
+                // Generate new prediction when timer resets (every minute)
+                if (remainingSeconds === 60) {
+                    generatePrediction();
+                }
+            }, 1000);
+            
+            // Generate initial prediction
+            generatePrediction();
+        }
+        
+        // Generate a prediction using 35 logic
+        function generatePrediction() {
+            if (!currentPeriod) return;
+            
+            // Use period number to seed the prediction for consistency
+            const seed = parseInt(currentPeriod.slice(-4)) % 100;
+            
+            // 35 Logic implementation
+            const predictionIndex = (seed * 7 + 13) % predictions.length;
+            currentPrediction = predictions[predictionIndex];
+            
+            // Update display
+            displayPrediction(currentPrediction);
+        }
+        
+        // Display the prediction with appropriate styling
+        function displayPrediction(prediction) {
+            predictionResult.textContent = prediction;
+            predictionResult.className = `prediction-result prediction-${prediction.toLowerCase()}`;
+        }
+        
+        // Mark result as Win or Loss
+        function markResult(result) {
+            if (!currentPrediction || !currentPeriod) {
+                alert('No prediction available to mark!');
+                return;
+            }
+            
+            // Add to history
+            const historyItem = {
+                period: currentPeriod,
+                prediction: currentPrediction,
+                result: result,
+                timestamp: new Date().toLocaleString()
+            };
+            
+            history.unshift(historyItem);
+            
+            // Keep only last 50 entries
+            if (history.length > 50) {
+                history = history.slice(0, 50);
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('predictionHistory', JSON.stringify(history));
+            
+            // Update display
+            updateHistoryDisplay();
+            updateWinRate();
+            
+            // Reset current prediction
+            currentPrediction = null;
+            predictionResult.textContent = "Waiting for next period...";
+            predictionResult.className = "prediction-result";
+        }
+        
+        // Update the history display
+        function updateHistoryDisplay() {
+            historyList.innerHTML = '';
+            
+            if (history.length === 0) {
+                historyList.innerHTML = '<div class="history-item">No predictions yet</div>';
+                return;
+            }
+            
+            history.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = `history-item ${item.result.toLowerCase()}`;
+                
+                historyItem.innerHTML = `
+                    <div>Period: ${item.period} - ${item.prediction}</div>
+                    <div class="${item.result.toLowerCase()}">${item.result}</div>
+                `;
+                
+                historyList.appendChild(historyItem);
+            });
+        }
+        
+        // Calculate and update win rate
+        function updateWinRate() {
+            if (history.length === 0) {
+                winRateElement.textContent = '0%';
+                return;
+            }
+            
+            const wins = history.filter(item => item.result === 'Win').length;
+            const winRate = ((wins / history.length) * 100).toFixed(1);
+            winRateElement.textContent = `${winRate}%`;
+        }
+        
+        // Initialize the application
+        init();
+    </script>
+</body>
+  </html>
